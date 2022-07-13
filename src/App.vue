@@ -1,30 +1,20 @@
 <template>
-  <div class=''>
-    <h1>黑马头条</h1>
+  <div class="">
   </div>
 </template>
 <script>
 export default {
   name: 'App',
-  props: {
-  },
+  props: {},
   data () {
-    return {
-    }
+    return {}
   },
-  methods: {
-  },
-  created () {
-  },
-  mounted () {
-  },
-  watch: {
-  },
-  computed: {
-  },
-  components: {
-  }
+  methods: {},
+  created () { },
+  mounted () { },
+  watch: {},
+  computed: {},
+  components: {}
 }
 </script>
-<style scoped lang='scss'>
-</style>
+<style scoped lang="scss"></style>
