@@ -29,9 +29,9 @@ const routes = [
         component: () => import('@/views/QA')
       },
       {
-        path: '/profile',
-        name: 'profile',
-        component: () => import('@/views/Profile')
+        path: '/my',
+        name: 'my',
+        component: () => import('@/views/My')
       }
     ]
   }

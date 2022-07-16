@@ -91,7 +91,7 @@ export default {
         const res = await login(this.mobile, this.code)
         this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
-        this.$router.push('./profile')
+        this.$router.push('./my')
       } catch (error) {
         const status = error.response.status
         let message = '登录错误，请刷新'
@@ -116,9 +116,6 @@ export default {
           }
         }
       }
-    },
-    increment () {
-      this.$store.commit('setNumber', 1)
     }
   },
   created () {
