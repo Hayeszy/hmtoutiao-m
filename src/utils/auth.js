@@ -1,5 +1,6 @@
+// Authorization
 import storage from './storage'
-const TOKEN_KEY = 'HETMA_TOUTIAO_TOKEN'
+const TOKEN_KEY = 'HEIMA_TOUTIAO_TOKEN'
 
 export const getToken = () => storage.get(TOKEN_KEY)
 

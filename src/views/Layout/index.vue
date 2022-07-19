@@ -20,7 +20,7 @@
           <span class="text">首页</span>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item to="/my">
+      <van-tabbar-item to="/profile">
         <template #icon>
           <span class="toutiao toutiao-wode"></span>
           <span class="text">{{ $store.state.user.token ? '我的' : '未登录' }}</span>

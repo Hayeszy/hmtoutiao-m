@@ -191,6 +191,7 @@ export default {
 .user-info {
   display: flex;
   flex-direction: column;
+  padding: 0 0.42667rem;
 
   > .van-row {
     flex: 1;
