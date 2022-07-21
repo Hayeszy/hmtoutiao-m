@@ -13,24 +13,19 @@ const request = axios.create({
 //  - 响应拦截器
 //    - 每一个请求响应回来时, 都会执行的函数
 
-request.interceptors.request.use(
-  // 想在发送请求前做什么
-  // config 本次请求的配置
-  // 必须要返回出去
-  (config) => {
-    // config添加token
-    const token = store.state.user.token
+// 添加请求拦截器
+request.interceptors.request.use(function (config) {
+  const { token } = store.state.user
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-
-    return config
-  },
-  // 请求错误的时候, 处理的方法
-  (error) => {
-    return Promise.reject(error)
+  // 请求发起会经过这里
+  if (token) {
+    // console.log(`Bearer ${token}`)
+    config.headers.Authorization = `Bearer ${token}`
   }
-)
-
+  // 在发送请求之前做些什么
+  return config
+}, function (error) {
+  // 对请求错误做些什么s
+  return Promise.reject(error)
+})
 export default request

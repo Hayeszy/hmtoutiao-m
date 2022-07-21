@@ -182,10 +182,11 @@ export default {
           top: 0;
           right: 0;
           transform: translate(20%, -35%);
-          border: 0.02667rem solid #000;
+          border: 1px solid #000;
           border-radius: 50%;
           text-align: center;
-          line-height: 0.32rem;
+          line-height: 25px;
+          font-size: 25px;
         }
       }
     }

@@ -191,8 +191,7 @@ export default {
 .user-info {
   display: flex;
   flex-direction: column;
-  padding: 0 0.42667rem;
-
+  // padding: 0 0.42667rem;
   > .van-row {
     flex: 1;
   }
@@ -201,7 +200,6 @@ export default {
     .van-col {
       height: 100%;
     }
-
     .mobile {
       font-size: 0.4rem;
       color: #fff;
@@ -219,6 +217,7 @@ export default {
 
     .code-row {
       height: 100%;
+      margin-right: 40px;
     }
   }
   .grid {
