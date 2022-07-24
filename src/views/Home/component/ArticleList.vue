@@ -16,9 +16,9 @@
         finished-text="没有更多了~~~~"
       >
         <ArticleItem
-          v-for="item in articles"
-          :key="item.art_id"
-          :articleInfo="item"
+          v-for="(article, index) in articles"
+          :key="index"
+          :article="article"
         ></ArticleItem>
       </van-list>
     </van-pull-refresh>
@@ -31,12 +31,6 @@ import { getArticleList } from '@/api'
 // 引入组件
 import ArticleItem from './ArticleItem.vue'
 
-/*
- load事件: 滚动条触底时触发
- offset: 滚动条到底部的距离
- loading: 控制load事件触发  loading为false, 可以触发load事件, 并且每次触发load事件时候, vant会把loading设置为true
-         在加载完时候, 需要手动设置为false
-*/
 export default {
   components: {
     ArticleItem

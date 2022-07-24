@@ -1,65 +1,111 @@
 <template>
-  <div>
-    <!-- 渲染无图片 -->
-    <van-cell
-      v-if="articleInfo.cover.type === 0"
-      :title="articleInfo.title"
-      :label="articleDesc"
-    />
-
-    <!-- 渲染一张图片 -->
-    <van-cell
-      v-if="articleInfo.cover.type === 1"
-      :title="articleInfo.title"
-      :label="articleDesc"
-    >
-      <van-image
-        width="3rem"
-        height="2rem"
-        :src="articleInfo.cover.images[0]"
-      />
-    </van-cell>
-
-    <!-- 渲染三张图片 -->
-    <van-cell v-if="articleInfo.cover.type === 3" :title="articleInfo.title">
-      <template #label>
-        <!-- 图片 -->
-        <div>
+  <van-cell
+    class="article-item"
+    :to="`/article/${article.art_id}`"
+  >
+    <div
+      slot="title"
+      class="title van-multi-ellipsis--l2"
+    >{{ article.title }}</div>
+    <div slot="label">
+      <div
+        v-if="article.cover.type === 3"
+        class="cover-wrap"
+      >
+        <div
+          class="cover-item"
+          v-for="(img, index) in article.cover.images"
+          :key="index"
+        >
           <van-image
-            v-for="(item, index) in articleInfo.cover.images"
-            :key="index"
-            width="3rem"
-            height="2rem"
-            :src="item"
+            class="cover-item-img"
+            fit="cover"
+            :src="img"
           />
         </div>
-        <!-- 文章描述 -->
-        <span>{{ articleDesc }}</span>
-      </template>
-    </van-cell>
-  </div>
+      </div>
+      <div class="label-info-wrap">
+        <span>{{ article.aut_name }}</span>
+        <span>{{ article.comm_count }}评论</span>
+        <span>{{ article.pubdate | relativeTime }}</span>
+      </div>
+    </div>
+    <van-image
+      v-if="article.cover.type === 1"
+      slot="default"
+      class="right-cover"
+      fit="cover"
+      :src="article.cover.images[0]"
+    />
+  </van-cell>
 </template>
 
 <script>
-// 引入utils
-import dayjs from '@/utils/dayjs'
 export default {
+  name: 'ArticleItem',
+  components: {},
   props: {
-    articleInfo: {
+    article: {
       type: Object,
       required: true
     }
   },
-  computed: {
-    // 文章的描述
-    articleDesc () {
-      const art = this.articleInfo
-      const relativeTime = dayjs(art.pubdate).fromNow()
-
-      return `${art.aut_name} ${art.comm_count}评论 ${relativeTime}`
-    }
-  }
+  data () {
+    return {}
+  },
+  computed: {},
+  watch: {},
+  created () { },
+  mounted () { },
+  methods: {}
 }
 </script>
 
-<style></style>
+<style scoped lang="less">
+.article-item {
+  .title {
+    font-size: 32px;
+    color: #3a3a3a;
+  }
+
+  .van-cell__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .van-cell__value {
+    flex: unset;
+    width: 232px;
+    height: 146px;
+    padding-left: 25px;
+  }
+
+  .right-cover {
+    width: 100%;
+    height: 146px;
+  }
+
+  .label-info-wrap span {
+    font-size: 22px;
+    color: #b4b4b4;
+    margin-right: 25px;
+  }
+
+  .cover-wrap {
+    display: flex;
+    padding: 30px 0;
+    .cover-item {
+      flex: 1;
+      height: 146px;
+      &:not(:last-child) {
+        padding-right: 4px;
+      }
+      .cover-item-img {
+        width: 100%;
+        height: 146px;
+      }
+    }
+  }
+}
+</style>

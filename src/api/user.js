@@ -29,8 +29,26 @@ export const sendCode = (mobile) => {
  * @returns Promise
  */
 export const getUserInfo = () => {
-  // url methods headers
   return request({
     url: '/v1_0/user'
+  })
+}
+
+// 关注用户
+export const addFollow = target => {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target
+    }
+  })
+}
+
+// 取消关注用户
+export const deleteFollow = target => {
+  return request({
+    url: `/v1_0/user/followings/${target}`,
+    method: 'DELETE'
   })
 }

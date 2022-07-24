@@ -6,3 +6,7 @@ export * from './channel'
 export * from './news'
 
 export * from './search'
+
+export * from './articel'
+
+export * from './comment'

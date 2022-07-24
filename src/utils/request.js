@@ -1,11 +1,22 @@
 // 引入axios
 import axios from 'axios'
 import store from '@/store'
+import JSONBig from 'json-bigint'
 // 配置axios的默认配置
 //  - 创建一个全新的axios的对象, 克隆
 const request = axios.create({
   baseURL: 'http://toutiao.itheima.net',
-  timeout: 3000
+  timeout: 3000,
+
+  // 自定义后端返回的原始数据
+  // data: 后端返回的原始数据，是 JSON 格式的字符串
+  transformResponse: [function (data) {
+    try {
+      return JSONBig.parse(data)
+    } catch (err) {
+      return data
+    }
+  }]
 })
 // 拦截器
 //  - 请求拦截器
