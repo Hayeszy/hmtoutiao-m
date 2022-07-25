@@ -9,8 +9,8 @@
     @load="onLoad"
   >
     <comment-item
-      v-for="(item, index) in localList"
-      :key="index"
+      v-for="item in localList"
+      :key="item.com_id"
       :comment="item"
       @reply-click="$emit('reply-click', $event)"
     />
@@ -64,7 +64,7 @@ export default {
       try {
         const { data } = await getComments({
           type: this.type, //  评论类型
-          source: this.source.toString(), // id
+          source: this.source, // id
           offset: this.offset,
           limit: this.limit // 获取的评论数据个数
         })

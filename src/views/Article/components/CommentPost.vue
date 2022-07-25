@@ -65,7 +65,7 @@ export default {
       } catch (err) {
         this.$toast.fail('发布失败')
       }
-      this.$router.go(0)
+      // this.$router.go(0)
     }
   }
 }
