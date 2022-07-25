@@ -12,8 +12,8 @@
     <div class="main-wrap">
       <!-- 加载中 -->
       <div
-        class="loading-wrap"
         v-if="loading"
+        class="loading-wrap"
       >
         <van-loading
           color="#3296fa"
@@ -24,11 +24,11 @@
 
       <!-- 加载完成-文章详情 -->
       <div
-        class="article-detail"
         v-else-if="article.title"
+        class="article-detail"
       >
         <!-- 文章标题 -->
-        <h1 class="article-title">{{article.title}}</h1>
+        <h1 class="article-title">{{ article.title }}</h1>
         <!-- /文章标题 -->
 
         <!-- 用户信息 -->
@@ -47,16 +47,12 @@
           <div
             slot="title"
             class="user-name"
-          >{{article.aut_name}}</div>
+          >{{ article.aut_name }}</div>
           <div
             slot="label"
             class="publish-date"
-          >{{article.pubdate | relativeTime}}</div>
-
-          <!-- 关注组件 -->
-          <!-- 传递和修改事件参数 可以在在组件上使用 v-model方法
-          如果需要修改 v-model 的规则名称，可以通过子组件的 model 属性来配置修改-->
-          <FollowUser
+          >{{ article.pubdate | relativeTime }}</div>
+          <follow-user
             class="follow-btn"
             v-model="article.is_followed"
             :user-id="article.aut_id"
@@ -71,16 +67,14 @@
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
-
         <!-- 文章评论列表 -->
         <CommentList
-          :source.sync="article.art_id"
-          :list.sync="commentList"
+          :source="article.art_id"
+          :list="commentList"
           @onload-success="totalCommentCount = $event.total_count"
           @reply-click="onReplyClick"
         />
         <!-- /文章评论列表 -->
-
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button
@@ -88,20 +82,19 @@
             type="default"
             round
             size="small"
+            @click="isPostShow = true"
           >写评论</van-button>
           <van-icon
+            class="comment-icon"
             name="comment-o"
-            info="123"
-            color="#777"
+            :badge="totalCommentCount"
           />
-          <!-- 收藏组件 -->
-          <CollectArticle
+          <collect-article
             class="btn-item"
             v-model="article.is_collected"
             :article-id="article.art_id"
           />
-          <!-- 点赞组件 -->
-          <LikeArticle
+          <like-article
             class="btn-item"
             v-model="article.attitude"
             :article-id="article.art_id"
@@ -129,8 +122,8 @@
 
       <!-- 加载失败：404 -->
       <div
-        class="error-wrap"
         v-else-if="errStatus === 404"
+        class="error-wrap"
       >
         <van-icon name="failure" />
         <p class="text">该资源不存在或已删除！</p>
@@ -139,8 +132,8 @@
 
       <!-- 加载失败：其它未知错误（例如网络原因或服务端异常） -->
       <div
-        class="error-wrap"
         v-else
+        class="error-wrap"
       >
         <van-icon name="failure" />
         <p class="text">内容加载失败！</p>
@@ -150,32 +143,34 @@
         >点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
-
-      <!-- 评论回复 -->
-      <van-popup
-        v-model="isReplyShow"
-        position="bottom"
-        style="height: 100%;"
-      >
-        <CommentReply
-          v-if="isReplyShow"
-          :comment="currentComment"
-          @close="isReplyShow = false"
-        />
-      </van-popup>
-      <!-- /评论回复 -->
     </div>
+
+    <!-- 评论回复 -->
+    <van-popup
+      v-model="isReplyShow"
+      position="bottom"
+      style="height: 95%;"
+    >
+      <CommentReply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      />
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
+
 <script>
-import { ImagePreview } from 'vant'
 import { getArticleById } from '@/api'
+import { ImagePreview } from 'vant'
 import FollowUser from '@/components/FollowUser'
 import CollectArticle from '@/components/CollectArticle'
 import LikeArticle from '@/components/LikeArticle'
-import CommentList from './components/CommentList'
-import CommentPost from './components/CommentPost'
-import CommentReply from './components/CommentReply'
+import CommentList from '@/views/Article/components/CommentList.vue'
+import CommentPost from '@/views/Article/components/CommentPost.vue'
+import CommentReply from '@/views/Article/components/CommentReply.vue'
+
 export default {
   name: 'ArticleIndex',
   components: {
@@ -186,15 +181,16 @@ export default {
     CommentPost,
     CommentReply
   },
+  // 给所有的后代组件提供数据
+  provide: function () {
+    return {
+      articleId: this.articleId
+    }
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
       required: true
-    }
-  },
-  provide: function () {
-    return {
-      articleId: this.articleId
     }
   },
   data () {
@@ -207,7 +203,7 @@ export default {
       isPostShow: false, // 控制发布评论的显示状态
       commentList: [], // 评论列表
       isReplyShow: false,
-      currentComment: {}// 当前点击回复的评论项
+      currentComment: {} // 当前点击回复的评论项
     }
   },
   created () {
@@ -215,14 +211,10 @@ export default {
   },
   methods: {
     async loadArticle () {
+      // 展示 loading 加载中
       this.loading = true
       try {
         const { data } = await getArticleById(this.articleId)
-        console.log(data)
-
-        // if (Math.random() > 0.5) {
-        //   JSON.parse('dsankljdnskaljndlkjsa')
-        // }
 
         this.article = data.data
 
@@ -231,13 +223,12 @@ export default {
           this.previewImage()
         }, 0)
       } catch (err) {
-        // 加载失败
         if (err.response && err.response.status === 404) {
           this.errStatus = 404
         }
-        this.$toast('获取失败')
       }
-      // 加载完成
+
+      // 关闭 loading
       this.loading = false
     },
 
@@ -245,14 +236,13 @@ export default {
       // 得到所有的 img 节点
       const articleContent = this.$refs['article-content']
       const imgs = articleContent.querySelectorAll('img')
-      console.log(imgs)
 
       // 获取所有 img 地址
       const images = []
       imgs.forEach((img, index) => {
         images.push(img.src)
 
-        // 给每个 img 注册点击事件，在处理函数中调用预览
+        // 注册点击事件，在处理函数中调用预览
         img.onclick = () => {
           ImagePreview({
             // 预览的图片地址数组
@@ -267,7 +257,7 @@ export default {
     onPostSuccess (data) {
       // 关闭弹出层
       this.isPostShow = false
-      // 让发布内容插入到列表顶部
+      // 将发布内容显示到列表顶部
       this.commentList.unshift(data.new_obj)
     },
 
@@ -280,10 +270,20 @@ export default {
   }
 }
 </script>
+
 <style scoped lang="less">
 @import './github-markdown.css';
+
 .article-container {
   .main-wrap {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
+  .article-detail {
     position: fixed;
     left: 0;
     right: 0;
@@ -291,8 +291,6 @@ export default {
     bottom: 88px;
     overflow-y: scroll;
     background-color: #fff;
-  }
-  .article-detail {
     .article-title {
       font-size: 40px;
       padding: 50px 32px;
@@ -386,6 +384,17 @@ export default {
       line-height: 46px;
       color: #a7a7a7;
     }
+    /deep/ .van-icon {
+      font-size: 40px;
+    }
+    .comment-icon {
+      top: 2px;
+      color: #777;
+      .van-info {
+        font-size: 16px;
+        background-color: #e22829;
+      }
+    }
     .btn-item {
       border: none;
       padding: 0;
@@ -393,12 +402,11 @@ export default {
       line-height: 40px;
       color: #777777;
     }
-    :deep(.van-icon) {
-      font-size: 40px;
-      .van-info {
-        font-size: 16px;
-        background-color: #e22829;
-      }
+    .collect-btn--collected {
+      color: #ffa500;
+    }
+    .like-btn--liked {
+      color: #e5645f;
     }
   }
 }

@@ -5,33 +5,33 @@
       class="avatar"
       round
       fit="cover"
-      :src="comment.aut_photo"
+      :src="localComment.aut_photo"
     />
     <div
       slot="title"
       class="title-wrap"
     >
-      <div class="user-name">{{ comment.aut_name }}</div>
+      <div class="user-name">{{ localComment.aut_name }}</div>
       <van-button
         class="like-btn"
         :class="{
-          liked: comment.is_liking
+          liked: localComment.is_liking
         }"
-        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
+        :icon="localComment.is_liking ? 'good-job' : 'good-job-o'"
         :loading="commentLoading"
         @click="onCommentLike"
-      >{{ comment.like_count || '赞' }}</van-button>
+      >{{ localComment.like_count || '赞' }}</van-button>
     </div>
 
     <div slot="label">
-      <p class="comment-content">{{ comment.content }}</p>
+      <p class="comment-content">{{ localComment.content }}</p>
       <div class="bottom-info">
-        <span class="comment-pubdate">{{ comment.pubdate | relativeTime }}</span>
+        <span class="comment-pubdate">{{ localComment.pubdate | relativeTime }}</span>
         <van-button
           class="reply-btn"
           round
-          @click="$emit('reply-click', comment)"
-        >回复 {{ comment.reply_count }}</van-button>
+          @click="$emit('reply-click', localComment)"
+        >回复 {{ localComment.reply_count }}</van-button>
       </div>
     </div>
   </van-cell>
@@ -46,10 +46,9 @@ export default {
       required: true
     }
   },
-  components: {},
-  created () { },
   data () {
     return {
+      localComment: this.comment,
       commentLoading: false
     }
   },
@@ -57,26 +56,22 @@ export default {
     async onCommentLike () {
       this.commentLoading = true
       try {
-        if (this.comment.is_likeing) {
+        if (this.localComment.is_liking) {
           // 已点赞就取消
-          await deleteCommentLike(this.comment.com_id)
-          // this.comment.like_count--
+          await deleteCommentLike(this.localComment.com_id)
+          this.localComment.like_count--
         } else {
           // 没有则添加点赞
-          await addCommentLike(this.comment.com_id)
-          // this.comment.like_count++
+          await addCommentLike(this.localComment.com_id)
+          this.localComment.like_count++
         }
-        // this.comment.is_likeing = !this.comment.is_likeing
+        this.localComment.is_liking = !this.localComment.is_liking
       } catch (error) {
         this.$toast('操作失败，请重试')
       }
       this.commentLoading = false
     }
-  },
-  computed: {},
-  watch: {},
-  mounted () { },
-  beforeDestroy () { }
+  }
 }
 </script>
 <style lang='less' scoped>

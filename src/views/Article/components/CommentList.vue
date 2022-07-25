@@ -9,22 +9,22 @@
     @load="onLoad"
   >
     <comment-item
-      v-for="(item, index) in list"
+      v-for="(item, index) in localList"
       :key="index"
       :comment="item"
       @reply-click="$emit('reply-click', $event)"
     />
   </van-list>
 </template>
+
 <script>
 import { getComments } from '@/api'
 import CommentItem from './CommentItem.vue'
+
 export default {
   name: 'CommentList',
   components: {
     CommentItem
-  },
-  model: {
   },
   props: {
     source: {
@@ -44,55 +44,47 @@ export default {
       default: 'a'
     }
   },
-  created () {
-    // 开启loading
-    this.loading = true
-    this.onLoad()
-  },
   data () {
     return {
+      localList: this.list,
       loading: false,
       finished: false,
-      offset: null,
+      offset: null, // 获取下一页数据的标记
       limit: 10,
       error: false
     }
   },
+  created () {
+    // 开启初始 loading
+    this.loading = true
+    this.onLoad()
+  },
   methods: {
     async onLoad () {
       try {
-        // a 文章的评论
-        // c 评论的回复
-        // 文章的评论，传递文章的 ID
-        // 评论的回复，传递评论的 ID
-
-        // 获取数据
         const { data } = await getComments({
-          type: this.type, // 评论的类型
+          type: this.type, //  评论类型
           source: this.source.toString(), // id
-          offset: this.offset, // 获取数据偏移量，值为id，不传从第一页开始读取
-          limit: this.limit // 获取评论个数
+          offset: this.offset,
+          limit: this.limit // 获取的评论数据个数
         })
 
-        // 添加到列表
+        // 将数据添加到列表
         const { results } = data.data
-        // this.list.push(...results)
+        this.localList.push(...results)
 
-        // 评论数据传到父组件
+        // 把文章评论数量传到父组件
         this.$emit('onload-success', data.data)
 
-        // 关闭 loading
         this.loading = false
 
         // 判断还有没有数据
         if (results.length) {
-          // 有就获取下一页
           this.offset = data.data.last_id
         } else {
-          // 没有 finished 设置结束
           this.finished = true
         }
-      } catch (error) {
+      } catch (err) {
         this.error = true
         this.loading = false
       }
@@ -100,5 +92,5 @@ export default {
   }
 }
 </script>
-<style lang='less' scoped>
-</style>
+
+<style scoped lang="less"></style>
