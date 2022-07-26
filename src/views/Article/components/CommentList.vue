@@ -66,7 +66,7 @@ export default {
           type: this.type, //  评论类型
           source: this.source, // id
           offset: this.offset,
-          limit: this.limit // 获取的评论数据个数
+          limit: this.limit
         })
 
         // 将数据添加到列表

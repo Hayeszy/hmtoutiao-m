@@ -35,6 +35,7 @@
                 class="code-btn"
                 round
                 size="mini"
+                to="/user/profile"
               >编辑资料</van-button>
             </van-row>
           </van-col>

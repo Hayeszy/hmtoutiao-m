@@ -42,6 +42,11 @@ const routes = [
     name: 'article',
     component: () => import('@/views/Article'),
     props: true
+  },
+  {
+    path: '/user/profile',
+    name: 'userprofile',
+    component: () => import('@/views/UserProfile')
   }
 ]
 
